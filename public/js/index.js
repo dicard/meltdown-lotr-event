@@ -5,8 +5,39 @@ var goodHealthPourcentage = 100;
 
 var socket = io.connect('http://localhost:1337');
 
-var app = new VTTCue( {
-    el:
+var app = new Vue( {
+    el:'#app',
+    data: {
+        bosses : [
+            {
+                faction: "good",
+                name: "Communautée de l'anneau",
+                hpMax: 5000,
+                currentHp: 5000,
+            },
+            {
+                faction: "evil",
+                name: "Sauron",
+                hpMax: 5000,
+                currentHp: 5000,
+            }
+        ],
+
+        quests: [
+            {
+                questOrder: 1,
+                name: "First quest",
+                reward: 500,
+                winners:"",
+            },
+            {
+                questOrder: 2,
+                name: "Second quest",
+                reward: 500,
+                winners:"",
+            }
+        ]
+    }
 })
 
 $('#shooter-bien').click( e => {
