@@ -64,13 +64,13 @@ body h3 {
 }
 
 
-#health-bar {
+#good-health-bar, #evil-health-bar  {
     display: block;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: auto;
-    width: 60vw;
+    width: 40vw;
     height: 3em;
     padding: 0.5em;
     background: #555;
@@ -81,7 +81,7 @@ body h3 {
     position: relative;
 }
 
-#health {
+#good-health, #evil-health {
     background: #c54;
     width: 100%;
     height: 2em;

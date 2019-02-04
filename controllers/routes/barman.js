@@ -3,7 +3,7 @@ var express = require('express'),
 
 index.get('/', (req, res) => {
  
-    res.render('barman.ejs', {title: 'Barmen part' });
+    res.render('barman.html', {title: 'Barmen part' });
 
 })
 

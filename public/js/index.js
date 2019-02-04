@@ -1,9 +1,13 @@
-var guerriersBien = 0 ;
-var guerriersMal = 0;
-var vieBoss = 5000;
-var healthPourcentage = 100;
+var vieGentils = 5000;
+var vieSauron = 5000;
+var evilHealthPourcentage = 100;
+var goodHealthPourcentage = 100;
 
 var socket = io.connect('http://localhost:1337');
+
+var app = new VTTCue( {
+    el:
+})
 
 $('#shooter-bien').click( e => {
     socket.emit('guerriersBien', 3);
@@ -46,21 +50,17 @@ $('#bouteille-mal').click( e => {
 });
 
 socket.on('dammagesBien', (nbr) => {
-    guerriersBien += nbr;
-    vieBoss -= nbr;
-    healthPourcentage = (vieBoss / 5000 ) * 100;
-    $('#guerriers-bien').text(guerriersBien);
-    vieBoss <=0 ? $('#health-value').text(0) :$('#health-value').text(vieBoss);
-    $('#health').css('width', healthPourcentage + '%');
+    vieSauron -= nbr;
+    evilHealthPourcentage = (vieSauron / 5000 ) * 100;
+    vieSauron <=0 ? $('#evil-health-value').text(0) :$('#evil-health-value').text(vieSauron);
+    $('#evil-health').css('width', evilHealthPourcentage + '%');
 });
 
 socket.on('dammagesMal', (nbr) => {
-    guerriersMal += nbr;
-    vieBoss -= nbr;
+    vieGentils -= nbr;
     
-    healthPourcentage = (vieBoss / 5000 ) * 100;
-    $('#guerriers-mal').text(guerriersMal);
-    vieBoss <=0 ? $('#health-value').text(0) :$('#health-value').text(vieBoss);
+    goodHealthPourcentage = (vieGentils / 5000 ) * 100;
+    vieGentils <=0 ? $('#good-health-value').text(0) :$('#good-health-value').text(vieGentils);
     
-    $('#health').css('width', healthPourcentage + '%');
+    $('#good-health').css('width', goodHealthPourcentage + '%');
 });
