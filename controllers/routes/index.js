@@ -3,7 +3,7 @@ var express = require('express'),
 
 index.get('/', (req, res) => {
  
-    res.render('index.html', {title: 'Meltdown LOTR event' });
+    res.render('index.ejs', {title: 'Meltdown LOTR event' });
 
 })
 

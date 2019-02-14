@@ -2,92 +2,45 @@ var vieGentils = 5000;
 var vieSauron = 5000;
 var evilHealthPourcentage = 100;
 var goodHealthPourcentage = 100;
-
 var socket = io.connect('http://localhost:1337');
 
-var app = new Vue( {
-    el:'#app',
-    data: {
-        bosses : [
-            {
-                faction: "good",
-                name: "Communautée de l'anneau",
-                hpMax: 5000,
-                currentHp: 5000,
-            },
-            {
-                faction: "evil",
-                name: "Sauron",
-                hpMax: 5000,
-                currentHp: 5000,
-            }
-        ],
 
-        quests: [
-            {
-                questOrder: 1,
-                name: "First quest",
-                reward: 500,
-                winners:"",
-            },
-            {
-                questOrder: 2,
-                name: "Second quest",
-                reward: 500,
-                winners:"",
-            }
-        ]
+function dealDamage(factionDamaged, damageAmount) {
+    socket.emit(factionDamaged, damageAmount);
+};
+
+function showQuest(questId) {
+    socket.emit('show-quest', questId)
+};
+
+function finishQuest(questId) {
+    var winner = prompt("Entrer si les bons ou les mauvais ont gagné.")
+    if(winner === 'bon') {
+        socket.emit('set-winner', questId, 'Communautée de l\'anneau');
+        
     }
+    else if(winner === 'mauvais') {
+        socket.emit('set-winner', questId, 'Sauron');    }
+    else {
+        this.finishQuest(questId);
+    }
+}
+
+socket.on('quests-list', function(questsList) {
+    questsList.forEach(function (quest)  {
+        $('#quest-wrapper').append('<div class="quest-card"> <h2 class="quest-title">' + quest.name + '</h2> <button class="quest-button" onclick="showQuest('+ quest.id +')"> Afficher la quete </button> <button class="quest-button" onclick="finishQuest('+ quest.id +')"> Valider la quete </button> </div>') 
+    });
+      
 })
 
-$('#shooter-bien').click( e => {
-    socket.emit('guerriersBien', 3);
-});
-
-$('#shooter-mal').click( e => {
-    socket.emit('guerriersMal', 3);
-});
-
-$('#mettre-bien').click( e => {
-    socket.emit('guerriersBien', 20);
-});
-
-$('#mettre-mal').click( e => {
-    socket.emit('guerriersMal', 20);
-});
-
-$('#bierre-bien').click( e => {
-    socket.emit('guerriersBien', 5);
-});
-
-$('#bierre-mal').click( e => {
-    socket.emit('guerriersMal', 5);
-});
-
-$('#cocktail-bien').click( e => {
-    socket.emit('guerriersBien', 7);
-});
-
-$('#cocktail-mal').click( e => {
-    socket.emit('guerriersMal', 7);
-});
-
-$('#bouteille-bien').click( e => {
-    socket.emit('guerriersBien', 50);
-});
-
-$('#bouteille-mal').click( e => {
-    socket.emit('guerriersMal', 50);
-});
-
-socket.on('dammagesBien', (nbr) => {
+socket.on('hit-evil-boss', function (nbr)  {
     vieSauron -= nbr;
     evilHealthPourcentage = (vieSauron / 5000 ) * 100;
     vieSauron <=0 ? $('#evil-health-value').text(0) :$('#evil-health-value').text(vieSauron);
     $('#evil-health').css('width', evilHealthPourcentage + '%');
 });
 
-socket.on('dammagesMal', (nbr) => {
+socket.on('hit-good-boss', function (nbr) { 
     vieGentils -= nbr;
     
     goodHealthPourcentage = (vieGentils / 5000 ) * 100;
@@ -95,3 +48,18 @@ socket.on('dammagesMal', (nbr) => {
     
     $('#good-health').css('width', goodHealthPourcentage + '%');
 });
+
+socket.on('quest-to-show', function (quest) {
+    
+    if (quest.showned === false) {
+
+        $('#quests-list').append('<div class="quest-item"> <h2 class ="quest-title"> Quete N° '+ quest.id +' : </h2><p>'+ quest.name +'</p><h2>Degats au boss : </h2><p>'+ quest.value +' HP</p><h2>Vainqueurs : </h2><p id="quest-'+ quest.id +'">'+ quest.winner+'</p></div>');
+    }
+})
+
+socket.on('show-winner', function (quest) {
+  
+    if(quest.winned === false) {
+        $('#quest-'+quest.id).text(quest.winner);
+    }
+})

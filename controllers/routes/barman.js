@@ -1,10 +1,10 @@
 var express = require('express'),
-    index = express.Router();
+    barman = express.Router();
 
-index.get('/', (req, res) => {
+barman.get('/', (req, res) => {
  
-    res.render('barman.html', {title: 'Barmen part' });
+    res.render('barman.ejs', {title: 'Barmen part' });
 
 })
 
-module.exports = index;
+module.exports = barman;
